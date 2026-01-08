@@ -34,12 +34,12 @@
         position: relative;
       }
 
-      /* 倒數計時器 */
+      /* 倒數計時器 - 字體加大 */
       #idleTimer {
         position: fixed; top: 10px; right: 15px;
         background-color: rgba(141, 110, 99, 0.9);
-        color: white; padding: 5px 15px; border-radius: 20px;
-        font-size: 0.9rem; z-index: 1000; font-weight: 500;
+        color: white; padding: 8px 18px; border-radius: 20px;
+        font-size: 1.1rem; z-index: 1000; font-weight: 500; /* 原 0.9rem -> 1.1rem */
         transition: opacity 0.3s;
         box-shadow: 0 2px 5px rgba(0,0,0,0.1);
       }
@@ -48,49 +48,49 @@
 
       /* 主容器 */
       .container {
-        max-width: 600px; margin-top: 40px; margin-bottom: 60px;
+        max-width: 650px; margin-top: 40px; margin-bottom: 60px; /*稍微加寬 max-width */
         background: var(--card-bg); padding: 40px; border-radius: var(--border-radius);
         box-shadow: 0 10px 30px rgba(93, 64, 55, 0.08); border: 1px solid #EFEBE9;
       }
-      @media (max-width: 576px) { .container { margin-top: 60px; padding: 25px; margin-bottom: 20px; } }
+      @media (max-width: 576px) { .container { margin-top: 70px; padding: 25px; margin-bottom: 20px; } }
 
-      /* 標題與文字 */
+      /* 標題與文字 - 字體加大 */
       .header-title {
-        text-align: center; color: var(--primary-color); margin-bottom: 10px;
-        font-family: 'Noto Serif TC', serif; font-weight: 900; font-size: 2.2rem;
+        text-align: center; color: var(--primary-color); margin-bottom: 15px;
+        font-family: 'Noto Serif TC', serif; font-weight: 900; font-size: 2.5rem; /* 原 2.2rem -> 2.5rem */
         letter-spacing: 2px; position: relative; padding-bottom: 15px;
       }
       .header-title::after {
-        content: ""; display: block; width: 60px; height: 4px;
+        content: ""; display: block; width: 80px; height: 5px;
         background-color: var(--primary-color); margin: 10px auto 0;
         border-radius: 2px; opacity: 0.5;
       }
-      .sub-title { text-align: center; color: #8D6E63; font-size: 1rem; margin-bottom: 30px; font-family: 'Noto Serif TC', serif; font-weight: 600; }
+      .sub-title { text-align: center; color: #8D6E63; font-size: 1.2rem; margin-bottom: 35px; font-family: 'Noto Serif TC', serif; font-weight: 600; } /* 原 1rem -> 1.2rem */
       
-      label.form-label, label { font-weight: 600; color: #5D4037; font-size: 1.05rem; }
+      label.form-label, label { font-weight: 600; color: #5D4037; font-size: 1.25rem; } /* 原 1.05rem -> 1.25rem */
       
-      /* 表單元件 */
+      /* 表單元件 - 字體加大 */
       .form-select {
-        border-radius: 10px; border: 1px solid #D7CCC8; padding: 10px 15px;
-        background-color: #FAFAFA; color: #5D4037; font-size: 1rem; cursor: pointer;
+        border-radius: 10px; border: 1px solid #D7CCC8; padding: 12px 15px;
+        background-color: #FAFAFA; color: #5D4037; font-size: 1.2rem; cursor: pointer; /* 原 1rem -> 1.2rem */
       }
       .form-select:focus { border-color: var(--primary-color); box-shadow: 0 0 0 0.25rem rgba(141, 110, 99, 0.25); }
-      .quantity-select { min-width: 100px !important; }
+      .quantity-select { min-width: 110px !important; } /* 稍微加寬 */
 
-      /* 粉筆區塊 */
+      /* 粉筆區塊 - 字體加大 */
       .chalk-section-title {
-        font-family: 'Noto Serif TC', serif; font-size: 1.3rem; color: var(--primary-color);
-        border-bottom: 2px dashed #D7CCC8; padding-bottom: 10px; margin-bottom: 20px; margin-top: 20px;
+        font-family: 'Noto Serif TC', serif; font-size: 1.5rem; color: var(--primary-color); /* 原 1.3rem -> 1.5rem */
+        border-bottom: 2px dashed #D7CCC8; padding-bottom: 12px; margin-bottom: 25px; margin-top: 25px;
       }
       .chalk-row {
-        display: flex; align-items: center; margin-bottom: 15px; padding: 12px 15px;
+        display: flex; align-items: center; margin-bottom: 18px; padding: 14px 18px;
         border-radius: 12px; background-color: #fff; border: 1px solid #F5F5F5;
         transition: transform 0.2s, box-shadow 0.2s;
       }
       .chalk-row:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.05); border-color: #EFEBE9; }
       
       .chalk-icon {
-        width: 32px; height: 32px; border-radius: 50%; margin-right: 15px;
+        width: 36px; height: 36px; border-radius: 50%; margin-right: 18px; /* icon 也稍微加大 */
         box-shadow: 0 2px 5px rgba(0,0,0,0.1); border: 2px solid #fff; flex-shrink: 0;
       }
       .bg-white-chalk { background-color: #ffffff; border: 2px solid #ddd; }
@@ -98,27 +98,27 @@
       .bg-green-chalk { background-color: #a5d6a7; }
       .bg-yellow-chalk { background-color: #ffe082; }
       .bg-blue-chalk { background-color: #90caf9; }
-      .chalk-name { flex-grow: 1; font-size: 1.05rem; letter-spacing: 0.5px; color: #5D4037; }
+      .chalk-name { flex-grow: 1; font-size: 1.25rem; letter-spacing: 0.5px; color: #5D4037; } /* 原 1.05rem -> 1.25rem */
 
-      /* 板擦區塊 */
+      /* 板擦區塊 - 字體加大 */
       .eraser-section {
-        background-color: var(--accent-yellow); padding: 20px; border-radius: 2px 12px 12px 12px;
-        border: none; box-shadow: 2px 2px 10px rgba(0,0,0,0.05); margin-top: 30px;
-        position: relative; border-top: 4px solid #FFD54F;
+        background-color: var(--accent-yellow); padding: 25px; border-radius: 2px 12px 12px 12px;
+        border: none; box-shadow: 2px 2px 10px rgba(0,0,0,0.05); margin-top: 35px;
+        position: relative; border-top: 5px solid #FFD54F;
       }
       .notice-text {
-        font-size: 0.95em; color: #795548; font-weight: normal; margin-top: 12px;
-        line-height: 1.6; background: rgba(255, 255, 255, 0.5); padding: 10px; border-radius: 8px;
+        font-size: 1.15em; color: #795548; font-weight: normal; margin-top: 15px; /* 原 0.95em -> 1.15em */
+        line-height: 1.6; background: rgba(255, 255, 255, 0.5); padding: 12px; border-radius: 8px;
       }
       .highlight {
         color: #D84315; font-weight: bold;
         background: linear-gradient(180deg, rgba(255,255,255,0) 60%, #FFCCBC 60%); padding: 0 4px;
       }
 
-      /* 按鈕 */
+      /* 按鈕 - 字體加大 */
       .btn-primary {
         background-color: var(--primary-color); border-color: var(--primary-color); border-radius: 50px;
-        padding: 12px 30px; font-size: 1.1rem; letter-spacing: 1px; font-weight: 500;
+        padding: 14px 35px; font-size: 1.3rem; letter-spacing: 1.5px; font-weight: 500; /* 原 1.1rem -> 1.3rem */
         box-shadow: 0 4px 10px rgba(141, 110, 99, 0.3); transition: all 0.3s;
       }
       .btn-primary:hover {
@@ -132,7 +132,7 @@
         background: rgba(249, 247, 242, 0.9); display: none;
         justify-content: center; align-items: center; z-index: 9999; flex-direction: column;
       }
-      .loading-text { margin-top: 15px; color: var(--primary-color); font-weight: 500; letter-spacing: 1px; }
+      .loading-text { margin-top: 15px; color: var(--primary-color); font-weight: 500; letter-spacing: 1px; font-size: 1.2rem; }
       
       #timeoutOverlay {
         position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -140,13 +140,14 @@
         flex-direction: column; justify-content: center; align-items: center; text-align: center;
       }
 
-      /* 公告區塊美化 */
+      /* 公告區塊美化 - 字體加大 */
       #dynamicNotice {
-        text-align: left;        /* 靠左對齊 */
-        line-height: 1.8;        /* 增加行高 */
-        padding: 15px 20px;      /* 增加內距 */
+        text-align: left;        
+        line-height: 1.8;        
+        padding: 18px 22px;      
         border-radius: 12px;
         box-shadow: inset 0 2px 5px rgba(0,0,0,0.03);
+        font-size: 1.15rem; /* 加大公告字體 */
       }
     </style>
   </head>
@@ -157,10 +158,10 @@
 
     <!-- 逾時遮罩 -->
     <div id="timeoutOverlay">
-      <h1 style="font-size: 4rem;">⏳</h1>
-      <h3>操作逾時，系統已自動關閉</h3>
-      <p class="mt-3">為了資訊安全，長時間未操作將自動關閉頁面。</p>
-      <button class="btn btn-outline-light mt-4" onclick="location.reload()">重新整理頁面</button>
+      <h1 style="font-size: 5rem;">⏳</h1>
+      <h3 style="font-size: 2rem;">操作逾時，系統已自動關閉</h3>
+      <p class="mt-3" style="font-size: 1.2rem;">為了資訊安全，長時間未操作將自動關閉頁面。</p>
+      <button class="btn btn-outline-light mt-4 btn-lg" onclick="location.reload()">重新整理頁面</button>
     </div>
 
     <div class="container">
@@ -172,8 +173,8 @@
       
       <!-- 初始 Loading -->
       <div id="initLoader" class="text-center my-5">
-        <div class="spinner-border text-secondary" role="status"></div>
-        <p class="mt-3 text-muted">正在連線至 Google 試算表...</p>
+        <div class="spinner-border text-secondary" role="status" style="width: 3rem; height: 3rem;"></div>
+        <p class="mt-3 text-muted" style="font-size: 1.2rem;">連線中...</p>
       </div>
 
       <form id="chalkForm" style="display:none;" onsubmit="handleFormSubmit(this)">
@@ -221,8 +222,8 @@
         <div class="eraser-section">
           <div class="d-flex align-items-center justify-content-between">
             <div>
-              <span style="font-size: 1.2rem;">🏫</span>
-              <span class="fw-bold ms-2" style="color: #4E342E;">板擦領取 (舊換新)</span>
+              <span style="font-size: 1.5rem;">🏫</span>
+              <span class="fw-bold ms-2" style="color: #4E342E; font-size: 1.3rem;">板擦領取 (舊換新)</span>
             </div>
             <select class="form-select w-auto quantity-select" name="eraser" style="border-color: #FFD54F;">
               <option value="">0</option>
@@ -245,7 +246,7 @@
 
     <!-- 送出時的遮罩 -->
     <div class="loading-overlay" id="submitLoader">
-      <div class="spinner-border text-secondary" style="width: 3rem; height: 3rem;" role="status"></div>
+      <div class="spinner-border text-secondary" style="width: 4rem; height: 4rem;" role="status"></div>
       <div class="loading-text">正在寫入紀錄...</div>
     </div>
 
@@ -265,7 +266,7 @@
       }
 
       // --- 閒置計時器邏輯 ---
-      var idleTime = 120; // 2分鐘 = 120秒
+      var idleTime = 120; // 2分鐘
       var idleInterval;
 
       function startIdleTimer() {
