@@ -39,7 +39,7 @@
         position: fixed; top: 10px; right: 15px;
         background-color: rgba(141, 110, 99, 0.9);
         color: white; padding: 8px 18px; border-radius: 20px;
-        font-size: 1.1rem; z-index: 1000; font-weight: 500; /* 原 0.9rem -> 1.1rem */
+        font-size: 1.1rem; z-index: 1000; font-weight: 500;
         transition: opacity 0.3s;
         box-shadow: 0 2px 5px rgba(0,0,0,0.1);
       }
@@ -48,38 +48,43 @@
 
       /* 主容器 */
       .container {
-        max-width: 650px; margin-top: 40px; margin-bottom: 60px; /*稍微加寬 max-width */
+        max-width: 650px; margin-top: 40px; margin-bottom: 60px;
         background: var(--card-bg); padding: 40px; border-radius: var(--border-radius);
         box-shadow: 0 10px 30px rgba(93, 64, 55, 0.08); border: 1px solid #EFEBE9;
       }
       @media (max-width: 576px) { .container { margin-top: 70px; padding: 25px; margin-bottom: 20px; } }
 
-      /* 標題與文字 - 字體加大 */
-      .header-title {
-        text-align: center; color: var(--primary-color); margin-bottom: 15px;
-        font-family: 'Noto Serif TC', serif; font-weight: 900; font-size: 2.5rem; /* 原 2.2rem -> 2.5rem */
-        letter-spacing: 2px; position: relative; padding-bottom: 15px;
+      /* 圖片標題容器樣式 - 更新為滿版配置 */
+      .header-image-container {
+        text-align: center;
+        margin-bottom: 25px; /* 增加下方間距 */
+        display: block;
+        width: 100%;
       }
-      .header-title::after {
-        content: ""; display: block; width: 80px; height: 5px;
-        background-color: var(--primary-color); margin: 10px auto 0;
-        border-radius: 2px; opacity: 0.5;
+      .header-image-container img {
+        width: 100%; /* 強制寬度填滿容器 */
+        height: auto; /* 高度自動 */
+        /* max-height: 200px; 已移除高度限制 */
+        border-radius: 12px; /* 加上圓角呼應整體風格 */
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* 增加立體感 */
+        object-fit: cover;
       }
-      .sub-title { text-align: center; color: #8D6E63; font-size: 1.2rem; margin-bottom: 35px; font-family: 'Noto Serif TC', serif; font-weight: 600; } /* 原 1rem -> 1.2rem */
+
+      .sub-title { text-align: center; color: #8D6E63; font-size: 1.2rem; margin-bottom: 35px; font-family: 'Noto Serif TC', serif; font-weight: 600; }
       
-      label.form-label, label { font-weight: 600; color: #5D4037; font-size: 1.25rem; } /* 原 1.05rem -> 1.25rem */
+      label.form-label, label { font-weight: 600; color: #5D4037; font-size: 1.25rem; }
       
       /* 表單元件 - 字體加大 */
       .form-select {
         border-radius: 10px; border: 1px solid #D7CCC8; padding: 12px 15px;
-        background-color: #FAFAFA; color: #5D4037; font-size: 1.2rem; cursor: pointer; /* 原 1rem -> 1.2rem */
+        background-color: #FAFAFA; color: #5D4037; font-size: 1.2rem; cursor: pointer;
       }
       .form-select:focus { border-color: var(--primary-color); box-shadow: 0 0 0 0.25rem rgba(141, 110, 99, 0.25); }
-      .quantity-select { min-width: 110px !important; } /* 稍微加寬 */
+      .quantity-select { min-width: 110px !important; }
 
       /* 粉筆區塊 - 字體加大 */
       .chalk-section-title {
-        font-family: 'Noto Serif TC', serif; font-size: 1.5rem; color: var(--primary-color); /* 原 1.3rem -> 1.5rem */
+        font-family: 'Noto Serif TC', serif; font-size: 1.5rem; color: var(--primary-color);
         border-bottom: 2px dashed #D7CCC8; padding-bottom: 12px; margin-bottom: 25px; margin-top: 25px;
       }
       .chalk-row {
@@ -90,7 +95,7 @@
       .chalk-row:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.05); border-color: #EFEBE9; }
       
       .chalk-icon {
-        width: 36px; height: 36px; border-radius: 50%; margin-right: 18px; /* icon 也稍微加大 */
+        width: 36px; height: 36px; border-radius: 50%; margin-right: 18px;
         box-shadow: 0 2px 5px rgba(0,0,0,0.1); border: 2px solid #fff; flex-shrink: 0;
       }
       .bg-white-chalk { background-color: #ffffff; border: 2px solid #ddd; }
@@ -98,7 +103,7 @@
       .bg-green-chalk { background-color: #a5d6a7; }
       .bg-yellow-chalk { background-color: #ffe082; }
       .bg-blue-chalk { background-color: #90caf9; }
-      .chalk-name { flex-grow: 1; font-size: 1.25rem; letter-spacing: 0.5px; color: #5D4037; } /* 原 1.05rem -> 1.25rem */
+      .chalk-name { flex-grow: 1; font-size: 1.25rem; letter-spacing: 0.5px; color: #5D4037; }
 
       /* 板擦區塊 - 字體加大 */
       .eraser-section {
@@ -107,7 +112,7 @@
         position: relative; border-top: 5px solid #FFD54F;
       }
       .notice-text {
-        font-size: 1.15em; color: #795548; font-weight: normal; margin-top: 15px; /* 原 0.95em -> 1.15em */
+        font-size: 1.15em; color: #795548; font-weight: normal; margin-top: 15px;
         line-height: 1.6; background: rgba(255, 255, 255, 0.5); padding: 12px; border-radius: 8px;
       }
       .highlight {
@@ -118,7 +123,7 @@
       /* 按鈕 - 字體加大 */
       .btn-primary {
         background-color: var(--primary-color); border-color: var(--primary-color); border-radius: 50px;
-        padding: 14px 35px; font-size: 1.3rem; letter-spacing: 1.5px; font-weight: 500; /* 原 1.1rem -> 1.3rem */
+        padding: 14px 35px; font-size: 1.3rem; letter-spacing: 1.5px; font-weight: 500;
         box-shadow: 0 4px 10px rgba(141, 110, 99, 0.3); transition: all 0.3s;
       }
       .btn-primary:hover {
@@ -147,7 +152,7 @@
         padding: 18px 22px;      
         border-radius: 12px;
         box-shadow: inset 0 2px 5px rgba(0,0,0,0.03);
-        font-size: 1.15rem; /* 加大公告字體 */
+        font-size: 1.15rem;
       }
     </style>
   </head>
@@ -165,7 +170,23 @@
     </div>
 
     <div class="container">
-      <h1 class="header-title">鳳甲國中粉筆領取</h1>
+      
+      <!-- 標題區域 -->
+      <div class="header-image-container">
+          <!-- 
+            這裡加入了 onerror 事件：
+            1. 主要嘗試載入原始檔案 (uc?export=view)
+            2. 如果失敗，onerror 會觸發，將 src 切換為備用連結 (thumbnail?sz=w1000)
+            3. loading="eager" 強制優先載入
+          -->
+          <img src="https://drive.google.com/uc?export=view&id=1AgOAGTXWoG5TDaa2phK6X5snDpJOvN0i" 
+               alt="鳳甲國中粉筆領取" 
+               class="img-fluid"
+               referrerpolicy="no-referrer"
+               loading="eager"
+               onerror="this.onerror=null; this.src='https://drive.google.com/thumbnail?id=1AgOAGTXWoG5TDaa2phK6X5snDpJOvN0i&sz=w1000';">
+      </div>
+      
       <div class="sub-title">請填寫下表完成登記</div>
       
       <!-- 動態注意事項 -->
