@@ -7,19 +7,19 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- 引入 SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <!-- 引入 Google Fonts: 思源宋體(標題用) 與 思源黑體(內文用) -->
+    <!-- 引入 Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500&family=Noto+Serif+TC:wght@600;900&display=swap" rel="stylesheet">
     
     <style>
       :root {
-        --primary-color: #8D6E63; /* 暖棕色 */
+        --primary-color: #8D6E63;
         --primary-hover: #6D4C41;
-        --bg-color: #F9F7F2;      /* 米白紙張色 */
-        --text-color: #4E342E;    /* 深咖啡文字 */
+        --bg-color: #F9F7F2;
+        --text-color: #4E342E;
         --card-bg: #FFFFFF;
-        --accent-yellow: #FFF8E1; /* 柔和黃背景 */
+        --accent-yellow: #FFF8E1;
         --border-radius: 16px;
       }
 
@@ -29,6 +29,32 @@
         color: var(--text-color);
         background-image: radial-gradient(#EFEBE9 1px, transparent 1px);
         background-size: 20px 20px;
+        position: relative; /* For timer positioning */
+      }
+
+      /* 倒數計時器樣式 */
+      #idleTimer {
+        position: fixed;
+        top: 10px;
+        right: 15px;
+        background-color: rgba(141, 110, 99, 0.9);
+        color: white;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        z-index: 1000;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        font-weight: 500;
+        transition: opacity 0.3s;
+      }
+      #idleTimer.urgent {
+        background-color: #e53935; /* 紅色警示 */
+        animation: pulse 1s infinite;
+      }
+      @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
       }
 
       .container {
@@ -42,10 +68,9 @@
         border: 1px solid #EFEBE9;
       }
       
-      /* 手機版調整 */
       @media (max-width: 576px) {
         .container {
-          margin-top: 20px;
+          margin-top: 50px; /* 避開上方的 Timer */
           padding: 25px;
           margin-bottom: 20px;
         }
@@ -55,7 +80,7 @@
         text-align: center;
         color: var(--primary-color);
         margin-bottom: 10px;
-        font-family: 'Noto Serif TC', serif; /* 宋體標題 */
+        font-family: 'Noto Serif TC', serif;
         font-weight: 900;
         font-size: 2.2rem;
         letter-spacing: 2px;
@@ -92,7 +117,7 @@
       .form-select {
         border-radius: 10px;
         border: 1px solid #D7CCC8;
-        padding: 10px 15px; /* 增加內距 */
+        padding: 10px 15px;
         background-color: #FAFAFA;
         color: #5D4037;
         font-size: 1rem;
@@ -103,7 +128,6 @@
         box-shadow: 0 0 0 0.25rem rgba(141, 110, 99, 0.25);
       }
 
-      /* 修正：強制設定數量選擇框的最小寬度，避免箭頭疊字 */
       .quantity-select {
         min-width: 100px !important; 
       }
@@ -223,15 +247,41 @@
         font-weight: 500;
         letter-spacing: 1px;
       }
+      
+      /* 逾時關閉的遮罩層 */
+      #timeoutOverlay {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: #333;
+        color: white;
+        z-index: 10000;
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+      }
     </style>
   </head>
   <body>
+
+    <!-- 閒置倒數計時器 -->
+    <div id="idleTimer">閒置倒數 02:00</div>
+
+    <!-- 逾時遮罩 -->
+    <div id="timeoutOverlay">
+      <h1>⏳</h1>
+      <h3>操作逾時，系統已自動關閉</h3>
+      <p class="mt-3">為了資訊安全，長時間未操作將自動關閉頁面。</p>
+      <button class="btn btn-outline-light mt-4" onclick="location.reload()">重新整理頁面</button>
+    </div>
 
     <div class="container">
       <h1 class="header-title">鳳甲國中粉筆領取</h1>
       <div class="sub-title">請填寫下表完成登記</div>
       
-      <!-- 動態注意事項 (移至標題下方) -->
+      <!-- 動態注意事項 -->
       <div id="dynamicNotice" class="alert mt-2 mb-4" style="display:none; white-space: pre-line; background-color: #EFEBE9; color: #5D4037; border-left: 4px solid #8D6E63;"></div>
       
       <div id="initLoader" class="text-center my-5">
@@ -245,7 +295,6 @@
 
       <form id="chalkForm" style="display:none;" onsubmit="handleFormSubmit(this)">
         
-        <!-- 班級與座號 -->
         <div class="row g-3 mb-4">
           <div class="col-md-6 col-12">
             <label for="classId" class="form-label">選擇班級</label>
@@ -256,7 +305,6 @@
           <div class="col-md-6 col-12">
             <label for="seatNo" class="form-label">選擇座號</label>
             <select class="form-select" id="seatNo" name="seatNo" required>
-               <!-- JS 生成 -->
             </select>
           </div>
         </div>
@@ -267,49 +315,38 @@
         <div class="chalk-row">
           <div class="chalk-icon bg-white-chalk" title="白色"></div>
           <span class="chalk-name">白色粉筆</span>
-          <!-- 加入 quantity-select 類別 -->
-          <select class="form-select w-auto quantity-select" name="white" id="whiteLimit">
-            <option value="">0</option>
-          </select>
+          <select class="form-select w-auto quantity-select" name="white" id="whiteLimit"><option value="">0</option></select>
         </div>
 
         <!-- 紅色 -->
         <div class="chalk-row">
           <div class="chalk-icon bg-red-chalk" title="紅色"></div>
           <span class="chalk-name">紅色粉筆</span>
-          <select class="form-select w-auto quantity-select" name="red" id="redLimit">
-            <option value="">0</option>
-          </select>
+          <select class="form-select w-auto quantity-select" name="red" id="redLimit"><option value="">0</option></select>
         </div>
 
         <!-- 綠色 -->
         <div class="chalk-row">
           <div class="chalk-icon bg-green-chalk" title="綠色"></div>
           <span class="chalk-name">綠色粉筆</span>
-          <select class="form-select w-auto quantity-select" name="green" id="greenLimit">
-            <option value="">0</option>
-          </select>
+          <select class="form-select w-auto quantity-select" name="green" id="greenLimit"><option value="">0</option></select>
         </div>
 
         <!-- 黃色 -->
         <div class="chalk-row">
           <div class="chalk-icon bg-yellow-chalk" title="黃色"></div>
           <span class="chalk-name">黃色粉筆</span>
-          <select class="form-select w-auto quantity-select" name="yellow" id="yellowLimit">
-            <option value="">0</option>
-          </select>
+          <select class="form-select w-auto quantity-select" name="yellow" id="yellowLimit"><option value="">0</option></select>
         </div>
 
         <!-- 藍色 -->
         <div class="chalk-row">
           <div class="chalk-icon bg-blue-chalk" title="藍色"></div>
           <span class="chalk-name">藍色粉筆</span>
-          <select class="form-select w-auto quantity-select" name="blue" id="blueLimit">
-            <option value="">0</option>
-          </select>
+          <select class="form-select w-auto quantity-select" name="blue" id="blueLimit"><option value="">0</option></select>
         </div>
 
-        <!-- 板擦區塊 -->
+        <!-- 板擦 -->
         <div class="eraser-section">
           <div class="d-flex align-items-center justify-content-between">
             <div>
@@ -341,7 +378,69 @@
     </div>
 
     <script>
+      // === 閒置倒數邏輯 ===
+      var idleTime = 120; // 2分鐘 = 120秒
+      var idleInterval;
+
+      function startIdleTimer() {
+        var timerDisplay = document.getElementById('idleTimer');
+        
+        idleInterval = setInterval(function() {
+          idleTime--;
+          
+          // 格式化時間 mm:ss
+          var minutes = Math.floor(idleTime / 60);
+          var seconds = idleTime % 60;
+          minutes = minutes < 10 ? "0" + minutes : minutes;
+          seconds = seconds < 10 ? "0" + seconds : seconds;
+          
+          timerDisplay.innerText = "閒置倒數 " + minutes + ":" + seconds;
+
+          // 剩餘 10 秒變色警示
+          if (idleTime < 10) {
+            timerDisplay.classList.add('urgent');
+          } else {
+            timerDisplay.classList.remove('urgent');
+          }
+
+          // 時間到
+          if (idleTime <= 0) {
+            clearInterval(idleInterval);
+            handleTimeout();
+          }
+        }, 1000);
+
+        // 監聽操作事件，重置計時器
+        var resetEvents = ['mousemove', 'mousedown', 'keypress', 'touchmove', 'click'];
+        resetEvents.forEach(function(evt) {
+          document.addEventListener(evt, function() {
+            if (idleTime > 0) { // 只有還沒超時才重置
+               idleTime = 120;
+               document.getElementById('idleTimer').classList.remove('urgent');
+               document.getElementById('idleTimer').innerText = "閒置倒數 02:00";
+            }
+          });
+        });
+      }
+
+      function handleTimeout() {
+        // 嘗試關閉視窗
+        try {
+          window.open('','_self').close();
+        } catch(e) { console.log('Close blocked'); }
+        
+        // 為了防止關閉失敗(瀏覽器安全性)，顯示遮罩層
+        document.getElementById('timeoutOverlay').style.display = 'flex';
+        document.getElementById('idleTimer').style.display = 'none';
+        // 隱藏內容
+        document.querySelector('.container').style.display = 'none';
+      }
+      // ===================
+
       window.onload = function() {
+        // 啟動倒數計時
+        startIdleTimer();
+
         // 設定連線逾時提醒
         var timeoutTimer = setTimeout(function() {
           var loader = document.getElementById('initLoader');
@@ -350,13 +449,13 @@
              Swal.fire({
                icon: 'warning',
                title: '連線逾時',
-               html: '讀取資料花費太久時間。<br>請檢查您是否在部署時選擇了<b>「建立新版本」</b>？<br>或者試算表內是否有<b>「設定」</b>工作表？',
+               html: '讀取資料花費太久時間。<br>請確認部署版本或試算表設定。',
                confirmButtonColor: '#8D6E63'
              });
           }
-        }, 8000); // 8秒後提示
+        }, 8000); 
 
-        // 預覽模式偵測 (Mock Data)
+        // 預覽模式
         if (typeof google === 'undefined' || typeof google.script === 'undefined') {
           console.warn('目前為預覽模式，使用模擬數據。');
           var mockData = {
@@ -371,18 +470,18 @@
             }
           };
           setTimeout(function() {
-            clearTimeout(timeoutTimer); // 預覽成功，清除逾時
+            clearTimeout(timeoutTimer);
             initializeForm(mockData);
           }, 800);
         } else {
           // 正式環境
           google.script.run
             .withSuccessHandler(function(data) {
-              clearTimeout(timeoutTimer); // 成功讀取，清除逾時
+              clearTimeout(timeoutTimer); 
               initializeForm(data);
             })
             .withFailureHandler(function(err) {
-              clearTimeout(timeoutTimer); // 發生錯誤，清除逾時
+              clearTimeout(timeoutTimer); 
               onFailure(err);
             })
             .getSettings();
@@ -401,7 +500,7 @@
 
       function initializeForm(data) {
         if (!data) {
-           onFailure(new Error("無法讀取設定資料，請確認試算表格式正確。"));
+           onFailure(new Error("無法讀取設定資料。"));
            return;
         }
 
@@ -432,11 +531,7 @@
       function populateLimitSelect(elementId, maxLimit) {
         var select = document.getElementById(elementId);
         select.innerHTML = '<option value="">0</option>';
-        
-        // 修正邏輯：如果 maxLimit 是 0，應該真的給 0，而不是預設 5
-        // 只有當 maxLimit 是空值或 undefined 時才給預設值
         var limit = (maxLimit === "" || maxLimit === null || maxLimit === undefined) ? 5 : maxLimit;
-        
         for (var i = 1; i <= limit; i++) {
           var option = document.createElement("option");
           option.text = i;
@@ -448,20 +543,24 @@
       function handleFormSubmit(formObject) {
         event.preventDefault();
         
+        // 暫停倒數計時，避免送出過程中被關閉
+        clearInterval(idleInterval);
+        
         document.getElementById('submitLoader').style.display = 'flex';
 
-        // 預覽模式模擬送出
         if (typeof google === 'undefined' || typeof google.script === 'undefined') {
           setTimeout(function() {
             document.getElementById('submitLoader').style.display = 'none';
             Swal.fire({
               icon: 'success',
               title: '預覽測試成功',
-              text: '此為預覽模式，資料並未真正寫入試算表。',
-              confirmButtonText: '確定',
+              text: '此為預覽模式。',
               confirmButtonColor: '#8D6E63'
             }).then(() => {
               formObject.reset();
+              // 重啟計時
+              idleTime = 120;
+              startIdleTimer();
             });
           }, 1000);
           return;
@@ -478,9 +577,16 @@
               confirmButtonColor: '#8D6E63'
             }).then(() => {
               formObject.reset();
+              // 成功後重啟計時，方便下一位使用
+              idleTime = 120;
+              startIdleTimer();
             });
           })
-          .withFailureHandler(onFailure)
+          .withFailureHandler(function(err) {
+             // 失敗也要重啟計時
+             onFailure(err);
+             startIdleTimer();
+          })
           .processForm(formObject);
       }
 
@@ -490,7 +596,7 @@
         Swal.fire({
           icon: 'error',
           title: '發生錯誤',
-          text: error.message || '無法連接到後端，請檢查網際網路或部署版本。',
+          text: error.message || '無法連接到後端。',
           confirmButtonColor: '#8D6E63'
         });
       }
