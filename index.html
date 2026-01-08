@@ -234,6 +234,10 @@
       <div id="initLoader" class="text-center my-5">
         <div class="spinner-border text-secondary" role="status"></div>
         <p class="mt-3 text-muted">正在準備表單...</p>
+        <p class="text-danger small" id="timeoutMsg" style="display:none;">
+          連線似乎有點久，請確認您已在部署時選擇「建立新版本」。<br>
+          或者檢查試算表是否有「設定」工作表。
+        </p>
       </div>
 
       <form id="chalkForm" style="display:none;" onsubmit="handleFormSubmit(this)">
@@ -338,6 +342,20 @@
 
     <script>
       window.onload = function() {
+        // 設定連線逾時提醒
+        var timeoutTimer = setTimeout(function() {
+          var loader = document.getElementById('initLoader');
+          if (loader.style.display !== 'none') {
+             document.getElementById('timeoutMsg').style.display = 'block';
+             Swal.fire({
+               icon: 'warning',
+               title: '連線逾時',
+               html: '讀取資料花費太久時間。<br>請檢查您是否在部署時選擇了<b>「建立新版本」</b>？<br>或者試算表內是否有<b>「設定」</b>工作表？',
+               confirmButtonColor: '#8D6E63'
+             });
+          }
+        }, 8000); // 8秒後提示
+
         // 預覽模式偵測 (Mock Data)
         if (typeof google === 'undefined' || typeof google.script === 'undefined') {
           console.warn('目前為預覽模式，使用模擬數據。');
@@ -353,13 +371,20 @@
             }
           };
           setTimeout(function() {
+            clearTimeout(timeoutTimer); // 預覽成功，清除逾時
             initializeForm(mockData);
           }, 800);
         } else {
           // 正式環境
           google.script.run
-            .withSuccessHandler(initializeForm)
-            .withFailureHandler(onFailure)
+            .withSuccessHandler(function(data) {
+              clearTimeout(timeoutTimer); // 成功讀取，清除逾時
+              initializeForm(data);
+            })
+            .withFailureHandler(function(err) {
+              clearTimeout(timeoutTimer); // 發生錯誤，清除逾時
+              onFailure(err);
+            })
             .getSettings();
         }
           
@@ -375,6 +400,11 @@
       };
 
       function initializeForm(data) {
+        if (!data) {
+           onFailure(new Error("無法讀取設定資料，請確認試算表格式正確。"));
+           return;
+        }
+
         var classSelect = document.getElementById('classId');
         data.classes.forEach(function(cls) {
           var option = document.createElement("option");
@@ -460,7 +490,7 @@
         Swal.fire({
           icon: 'error',
           title: '發生錯誤',
-          text: error.message,
+          text: error.message || '無法連接到後端，請檢查網際網路或部署版本。',
           confirmButtonColor: '#8D6E63'
         });
       }
