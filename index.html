@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <title>鳳甲國中粉筆領取登記表</title>
+    <!-- 引入 Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- 引入 SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- 引入 Google Fonts: 思源宋體(標題用) 與 思源黑體(內文用) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500&family=Noto+Serif+TC:wght@600;900&display=swap" rel="stylesheet">
+    
+    <style>
+      :root {
+        --primary-color: #8D6E63; /* 暖棕色 */
+        --primary-hover: #6D4C41;
+        --bg-color: #F9F7F2;      /* 米白紙張色 */
+        --text-color: #4E342E;    /* 深咖啡文字 */
+        --card-bg: #FFFFFF;
+        --accent-yellow: #FFF8E1; /* 柔和黃背景 */
+        --border-radius: 16px;
+      }
+
+      body {
+        background-color: var(--bg-color);
+        font-family: 'Noto Sans TC', sans-serif;
+        color: var(--text-color);
+        background-image: radial-gradient(#EFEBE9 1px, transparent 1px);
+        background-size: 20px 20px;
+      }
+
+      .container {
+        max-width: 600px;
+        margin-top: 40px;
+        margin-bottom: 60px;
+        background: var(--card-bg);
+        padding: 40px;
+        border-radius: var(--border-radius);
+        box-shadow: 0 10px 30px rgba(93, 64, 55, 0.08);
+        border: 1px solid #EFEBE9;
+      }
+      
+      /* 手機版調整 */
+      @media (max-width: 576px) {
+        .container {
+          margin-top: 20px;
+          padding: 25px;
+          margin-bottom: 20px;
+        }
+      }
+
+      .header-title {
+        text-align: center;
+        color: var(--primary-color);
+        margin-bottom: 10px;
+        font-family: 'Noto Serif TC', serif; /* 宋體標題 */
+        font-weight: 900;
+        font-size: 2.2rem;
+        letter-spacing: 2px;
+        position: relative;
+        padding-bottom: 15px;
+      }
+
+      .header-title::after {
+        content: "";
+        display: block;
+        width: 60px;
+        height: 4px;
+        background-color: var(--primary-color);
+        margin: 10px auto 0;
+        border-radius: 2px;
+        opacity: 0.5;
+      }
+
+      .sub-title {
+        text-align: center;
+        color: #8D6E63;
+        font-size: 1rem;
+        margin-bottom: 30px;
+        font-family: 'Noto Serif TC', serif;
+        font-weight: 600;
+      }
+
+      label.form-label, label {
+        font-weight: 600;
+        color: #5D4037;
+        font-size: 1.05rem;
+      }
+
+      .form-select {
+        border-radius: 10px;
+        border: 1px solid #D7CCC8;
+        padding: 10px 15px; /* 增加內距 */
+        background-color: #FAFAFA;
+        color: #5D4037;
+        font-size: 1rem;
+        cursor: pointer;
+      }
+      .form-select:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.25rem rgba(141, 110, 99, 0.25);
+      }
+
+      /* 修正：強制設定數量選擇框的最小寬度，避免箭頭疊字 */
+      .quantity-select {
+        min-width: 100px !important; 
+      }
+
+      .chalk-section-title {
+        font-family: 'Noto Serif TC', serif;
+        font-size: 1.3rem;
+        color: var(--primary-color);
+        border-bottom: 2px dashed #D7CCC8;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+        margin-top: 20px;
+      }
+
+      .chalk-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+        padding: 12px 15px;
+        border-radius: 12px;
+        background-color: #fff;
+        border: 1px solid #F5F5F5;
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+      
+      .chalk-row:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        border-color: #EFEBE9;
+      }
+
+      .chalk-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        margin-right: 15px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        border: 2px solid #fff;
+        flex-shrink: 0;
+      }
+      
+      .bg-white-chalk { background-color: #ffffff; border: 2px solid #ddd; }
+      .bg-red-chalk { background-color: #ff8a80; }
+      .bg-green-chalk { background-color: #a5d6a7; }
+      .bg-yellow-chalk { background-color: #ffe082; }
+      .bg-blue-chalk { background-color: #90caf9; }
+      
+      .chalk-name {
+        flex-grow: 1;
+        font-size: 1.05rem;
+        letter-spacing: 0.5px;
+        color: #5D4037;
+      }
+
+      .eraser-section {
+        background-color: var(--accent-yellow);
+        padding: 20px;
+        border-radius: 2px 12px 12px 12px;
+        border: none;
+        box-shadow: 2px 2px 10px rgba(0,0,0,0.05);
+        margin-top: 30px;
+        position: relative;
+        border-top: 4px solid #FFD54F;
+      }
+      
+      .notice-text {
+        font-size: 0.95em;
+        color: #795548;
+        font-weight: normal;
+        margin-top: 12px;
+        line-height: 1.6;
+        background: rgba(255, 255, 255, 0.5);
+        padding: 10px;
+        border-radius: 8px;
+      }
+      
+      .highlight {
+        color: #D84315;
+        font-weight: bold;
+        background: linear-gradient(180deg, rgba(255,255,255,0) 60%, #FFCCBC 60%);
+        padding: 0 4px;
+      }
+
+      .btn-primary {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+        border-radius: 50px;
+        padding: 12px 30px;
+        font-size: 1.1rem;
+        letter-spacing: 1px;
+        font-weight: 500;
+        box-shadow: 0 4px 10px rgba(141, 110, 99, 0.3);
+        transition: all 0.3s;
+      }
+      .btn-primary:hover {
+        background-color: var(--primary-hover);
+        border-color: var(--primary-hover);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(141, 110, 99, 0.4);
+      }
+
+      .loading-overlay {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(249, 247, 242, 0.9);
+        display: none; 
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        flex-direction: column;
+      }
+      
+      .loading-text {
+        margin-top: 15px;
+        color: var(--primary-color);
+        font-weight: 500;
+        letter-spacing: 1px;
+      }
+    </style>
+  </head>
+  <body>
+
+    <div class="container">
+      <h1 class="header-title">鳳甲國中粉筆領取</h1>
+      <div class="sub-title">請填寫下表完成登記</div>
+      
+      <div id="initLoader" class="text-center my-5">
+        <div class="spinner-border text-secondary" role="status"></div>
+        <p class="mt-3 text-muted">正在準備表單...</p>
+      </div>
+
+      <form id="chalkForm" style="display:none;" onsubmit="handleFormSubmit(this)">
+        
+        <!-- 班級與座號 -->
+        <div class="row g-3 mb-4">
+          <div class="col-md-6 col-12">
+            <label for="classId" class="form-label">選擇班級</label>
+            <select class="form-select" id="classId" name="classId" required>
+              <option value="" disabled selected>請選擇...</option>
+            </select>
+          </div>
+          <div class="col-md-6 col-12">
+            <label for="seatNo" class="form-label">選擇座號</label>
+            <select class="form-select" id="seatNo" name="seatNo" required>
+               <!-- JS 生成 -->
+            </select>
+          </div>
+        </div>
+
+        <div class="chalk-section-title">領取項目</div>
+
+        <!-- 白色 -->
+        <div class="chalk-row">
+          <div class="chalk-icon bg-white-chalk" title="白色"></div>
+          <span class="chalk-name">白色粉筆</span>
+          <!-- 加入 quantity-select 類別 -->
+          <select class="form-select w-auto quantity-select" name="white" id="whiteLimit">
+            <option value="">0</option>
+          </select>
+        </div>
+
+        <!-- 紅色 -->
+        <div class="chalk-row">
+          <div class="chalk-icon bg-red-chalk" title="紅色"></div>
+          <span class="chalk-name">紅色粉筆</span>
+          <select class="form-select w-auto quantity-select" name="red" id="redLimit">
+            <option value="">0</option>
+          </select>
+        </div>
+
+        <!-- 綠色 -->
+        <div class="chalk-row">
+          <div class="chalk-icon bg-green-chalk" title="綠色"></div>
+          <span class="chalk-name">綠色粉筆</span>
+          <select class="form-select w-auto quantity-select" name="green" id="greenLimit">
+            <option value="">0</option>
+          </select>
+        </div>
+
+        <!-- 黃色 -->
+        <div class="chalk-row">
+          <div class="chalk-icon bg-yellow-chalk" title="黃色"></div>
+          <span class="chalk-name">黃色粉筆</span>
+          <select class="form-select w-auto quantity-select" name="yellow" id="yellowLimit">
+            <option value="">0</option>
+          </select>
+        </div>
+
+        <!-- 藍色 -->
+        <div class="chalk-row">
+          <div class="chalk-icon bg-blue-chalk" title="藍色"></div>
+          <span class="chalk-name">藍色粉筆</span>
+          <select class="form-select w-auto quantity-select" name="blue" id="blueLimit">
+            <option value="">0</option>
+          </select>
+        </div>
+
+        <!-- 板擦區塊 -->
+        <div class="eraser-section">
+          <div class="d-flex align-items-center justify-content-between">
+            <div>
+              <span style="font-size: 1.2rem;">🏫</span>
+              <span class="fw-bold ms-2" style="color: #4E342E;">板擦領取 (舊換新)</span>
+            </div>
+            <select class="form-select w-auto quantity-select" name="eraser" style="border-color: #FFD54F;">
+              <option value="">0</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+            </select>
+          </div>
+          <div class="notice-text">
+            原則上一個班維持 <span class="highlight">2</span> 個板擦，若板擦破損，<br>
+            可拿 <span class="highlight">舊板擦</span> 至 <span class="highlight">設備組</span> 更換。
+          </div>
+        </div>
+        
+        <!-- 動態注意事項 -->
+        <div id="dynamicNotice" class="alert mt-3" style="display:none; white-space: pre-line; background-color: #EFEBE9; color: #5D4037; border-left: 4px solid #8D6E63;"></div>
+
+        <div class="d-grid gap-2 mt-5">
+          <button type="submit" class="btn btn-primary btn-lg">確認登記</button>
+        </div>
+
+      </form>
+    </div>
+
+    <div class="loading-overlay" id="submitLoader">
+      <div class="spinner-border text-secondary" style="width: 3rem; height: 3rem;" role="status"></div>
+      <div class="loading-text">正在寫入紀錄...</div>
+    </div>
+
+    <script>
+      window.onload = function() {
+        // 預覽模式偵測 (Mock Data)
+        if (typeof google === 'undefined' || typeof google.script === 'undefined') {
+          console.warn('目前為預覽模式，使用模擬數據。');
+          var mockData = {
+            classes: ["701 (預覽)", "702 (預覽)", "801 (預覽)", "901 (預覽)"],
+            limits: {
+              white: 10,
+              red: 5,
+              green: 5,
+              yellow: 5,
+              blue: 5,
+              notice: "同學請注意：期末請將粉筆盒整理乾淨。"
+            }
+          };
+          setTimeout(function() {
+            initializeForm(mockData);
+          }, 800);
+        } else {
+          // 正式環境
+          google.script.run
+            .withSuccessHandler(initializeForm)
+            .withFailureHandler(onFailure)
+            .getSettings();
+        }
+          
+        var seatSelect = document.getElementById('seatNo');
+        seatSelect.innerHTML = '<option value="" disabled selected>座號</option>';
+        for(var i=1; i<=50; i++){
+          var val = i < 10 ? '0' + i : i;
+          var option = document.createElement("option");
+          option.text = val;
+          option.value = val;
+          seatSelect.add(option);
+        }
+      };
+
+      function initializeForm(data) {
+        var classSelect = document.getElementById('classId');
+        data.classes.forEach(function(cls) {
+          var option = document.createElement("option");
+          option.text = cls;
+          option.value = cls;
+          classSelect.add(option);
+        });
+
+        populateLimitSelect('whiteLimit', data.limits.white);
+        populateLimitSelect('redLimit', data.limits.red);
+        populateLimitSelect('greenLimit', data.limits.green);
+        populateLimitSelect('yellowLimit', data.limits.yellow);
+        populateLimitSelect('blueLimit', data.limits.blue);
+
+        if(data.limits.notice){
+           var noticeDiv = document.getElementById('dynamicNotice');
+           noticeDiv.innerText = "📢 " + data.limits.notice;
+           noticeDiv.style.display = 'block';
+        }
+
+        document.getElementById('initLoader').style.display = 'none';
+        document.getElementById('chalkForm').style.display = 'block';
+      }
+
+      function populateLimitSelect(elementId, maxLimit) {
+        var select = document.getElementById(elementId);
+        select.innerHTML = '<option value="">0</option>';
+        
+        // 修正邏輯：如果 maxLimit 是 0，應該真的給 0，而不是預設 5
+        // 只有當 maxLimit 是空值或 undefined 時才給預設值
+        var limit = (maxLimit === "" || maxLimit === null || maxLimit === undefined) ? 5 : maxLimit;
+        
+        for (var i = 1; i <= limit; i++) {
+          var option = document.createElement("option");
+          option.text = i;
+          option.value = i;
+          select.add(option);
+        }
+      }
+
+      function handleFormSubmit(formObject) {
+        event.preventDefault();
+        
+        document.getElementById('submitLoader').style.display = 'flex';
+
+        // 預覽模式模擬送出
+        if (typeof google === 'undefined' || typeof google.script === 'undefined') {
+          setTimeout(function() {
+            document.getElementById('submitLoader').style.display = 'none';
+            Swal.fire({
+              icon: 'success',
+              title: '預覽測試成功',
+              text: '此為預覽模式，資料並未真正寫入試算表。',
+              confirmButtonText: '確定',
+              confirmButtonColor: '#8D6E63'
+            }).then(() => {
+              formObject.reset();
+            });
+          }, 1000);
+          return;
+        }
+
+        google.script.run
+          .withSuccessHandler(function() {
+            document.getElementById('submitLoader').style.display = 'none';
+            Swal.fire({
+              icon: 'success',
+              title: '登記成功',
+              text: '資料已寫入試算表',
+              confirmButtonText: '確定',
+              confirmButtonColor: '#8D6E63'
+            }).then(() => {
+              formObject.reset();
+            });
+          })
+          .withFailureHandler(onFailure)
+          .processForm(formObject);
+      }
+
+      function onFailure(error) {
+        document.getElementById('initLoader').style.display = 'none';
+        document.getElementById('submitLoader').style.display = 'none';
+        Swal.fire({
+          icon: 'error',
+          title: '發生錯誤',
+          text: error.message,
+          confirmButtonColor: '#8D6E63'
+        });
+      }
+    </script>
+  </body>
+</html>
