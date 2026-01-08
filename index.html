@@ -139,6 +139,15 @@
         background: #333; color: white; z-index: 10000; display: none;
         flex-direction: column; justify-content: center; align-items: center; text-align: center;
       }
+
+      /* 公告區塊美化 */
+      #dynamicNotice {
+        text-align: left;        /* 靠左對齊 */
+        line-height: 1.8;        /* 增加行高 */
+        padding: 15px 20px;      /* 增加內距 */
+        border-radius: 12px;
+        box-shadow: inset 0 2px 5px rgba(0,0,0,0.03);
+      }
     </style>
   </head>
   <body>
@@ -159,7 +168,7 @@
       <div class="sub-title">請填寫下表完成登記</div>
       
       <!-- 動態注意事項 -->
-      <div id="dynamicNotice" class="alert mt-2 mb-4" style="display:none; white-space: pre-line; background-color: #EFEBE9; color: #5D4037; border-left: 4px solid #8D6E63;"></div>
+      <div id="dynamicNotice" class="alert mt-2 mb-4" style="display:none; white-space: pre-wrap; background-color: #EFEBE9; color: #5D4037; border-left: 5px solid #8D6E63;"></div>
       
       <!-- 初始 Loading -->
       <div id="initLoader" class="text-center my-5">
@@ -179,7 +188,7 @@
           <div class="col-md-6 col-12">
             <label for="seatNo" class="form-label">選擇座號</label>
             <select class="form-select" id="seatNo" name="seatNo" required>
-              <!-- JS 動態生成 -->
+              <option value="" disabled selected>載入中...</option>
             </select>
           </div>
         </div>
@@ -243,7 +252,7 @@
     <script>
       // ============================================
       // 您的 Apps Script 部署網址 (Web App URL)
-      // 請確認此網址與您部署時產生的一致
+      // ============================================
       const API_URL = "https://script.google.com/macros/s/AKfycbzBIPyUk5CVXL8qSX_fyUkbfQ4aPzY4g6K0Lpqd64X7tik-6RG2ZYvl3TZE3J2_6jGE-w/exec";
       // ============================================
 
@@ -310,14 +319,10 @@
       // --- 頁面載入 ---
       window.onload = function() {
         startIdleTimer();
-
-        // 產生座號 01-50
+        
+        // 修正：初始不再顯示 1-50，改為 "載入中..."
         var seatSelect = document.getElementById('seatNo');
-        seatSelect.innerHTML = '<option value="" disabled selected>座號</option>';
-        for(var i=1; i<=50; i++){
-          var val = i < 10 ? '0' + i : i;
-          seatSelect.add(new Option(val, val));
-        }
+        seatSelect.innerHTML = '<option value="" disabled selected>載入中...</option>';
 
         // 使用 fetch 呼叫 GAS API 讀取設定
         fetch(API_URL + "?action=getSettings")
@@ -342,8 +347,24 @@
           classSelect.add(new Option(cls, cls));
         });
 
+        // 填入座號 (完全依照 Excel 資料)
+        var seatSelect = document.getElementById('seatNo');
+        seatSelect.innerHTML = '<option value="" disabled selected>請選擇...</option>';
+        if (data.seats && data.seats.length > 0) {
+            data.seats.forEach(function(s) {
+                var val = s;
+                // 自動補 0
+                if (!isNaN(s) && Number(s) < 10 && String(s).length < 2) {
+                     val = "0" + Number(s);
+                }
+                seatSelect.add(new Option(val, val));
+            });
+        } else {
+            // 如果 Excel 沒座號，顯示提示
+            seatSelect.innerHTML = '<option value="" disabled selected>無座號資料</option>';
+        }
+
         // 填入各顏色上限
-        // 陣列對應: id前綴, limits中的key
         var colors = [
           {id: 'white', key: 'white'},
           {id: 'red', key: 'red'},
@@ -354,7 +375,6 @@
 
         colors.forEach(function(c) {
            var limit = data.limits[c.key];
-           // 如果 API 回傳空或 null，預設給 5
            limit = (limit === "" || limit == null) ? 5 : limit;
            
            var select = document.getElementById(c.id + 'Limit');
@@ -364,10 +384,10 @@
            }
         });
 
-        // 顯示公告
-        if(data.limits.notice){
+        // 顯示公告 (加入標題)
+        if(data.limits.notice && data.limits.notice.trim() !== ""){
            var noticeDiv = document.getElementById('dynamicNotice');
-           noticeDiv.innerText = "📢 " + data.limits.notice;
+           noticeDiv.innerText = "📢 公告事項：\n" + data.limits.notice; 
            noticeDiv.style.display = 'block';
         }
 
@@ -387,7 +407,6 @@
         var data = Object.fromEntries(formData.entries());
 
         // 使用 POST 送出資料
-        // 使用 text/plain 以避開 CORS preflight
         fetch(API_URL, {
           method: 'POST',
           body: JSON.stringify(data),
